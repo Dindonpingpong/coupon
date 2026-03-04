@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { activateCoupon, type ActivateCouponResponse } from "../api/couponApi";
 
 export default function ActivateCoupon() {
+  const [orgId, setOrgId] = useState("");
   const [userId, setUserId] = useState("");
   const [ip, setIp] = useState("");
   const [title, setTitle] = useState("");
@@ -17,6 +18,7 @@ export default function ActivateCoupon() {
 
     try {
       const res = await activateCoupon({
+        orgId,
         userId,
         ip,
         data: { title },
@@ -36,6 +38,18 @@ export default function ActivateCoupon() {
     <div className="form-card">
       <h2>Активировать купон</h2>
       <form onSubmit={handleSubmit}>
+        <div className="field">
+          <label htmlFor="activateOrgId">Organization ID</label>
+          <input
+            id="activateOrgId"
+            type="text"
+            value={orgId}
+            onChange={(e) => setOrgId(e.target.value)}
+            placeholder="org-1"
+            required
+          />
+        </div>
+
         <div className="field">
           <label htmlFor="userId">ID пользователя</label>
           <input

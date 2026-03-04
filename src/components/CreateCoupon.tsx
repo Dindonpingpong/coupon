@@ -4,6 +4,7 @@ import { createCoupon, type CreateCouponResponse } from "../api/couponApi";
 const CURRENCIES = ["USD", "EUR", "RUB", "GBP", "CNY"];
 
 export default function CreateCoupon() {
+  const [orgId, setOrgId] = useState("");
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
@@ -26,12 +27,15 @@ export default function CreateCoupon() {
     setError("");
 
     try {
+      const formatDate = (v: string) =>
+        v.replace("T", " ").slice(0, 16) + ":00";
       const res = await createCoupon({
+        orgId,
         title,
         amount: Number(amount),
         currency,
-        validSince: new Date(validSince).toISOString(),
-        validUntil: new Date(validUntil).toISOString(),
+        validSince: formatDate(validSince),
+        validUntil: formatDate(validUntil),
       });
       setResult(res);
       if (!res.success) {
@@ -48,6 +52,18 @@ export default function CreateCoupon() {
     <div className="form-card">
       <h2>Создать купон</h2>
       <form onSubmit={handleSubmit}>
+        <div className="field">
+          <label htmlFor="orgId">Organization ID</label>
+          <input
+            id="orgId"
+            type="text"
+            value={orgId}
+            onChange={(e) => setOrgId(e.target.value)}
+            placeholder="org-1"
+            required
+          />
+        </div>
+
         <div className="field">
           <label htmlFor="title">Название</label>
           <input

@@ -1,6 +1,14 @@
-const BASE_URL = "https://shop.com/coupons/v1/coupon";
+const BASE_URL = import.meta.env.DEV
+  ? "/api/coupons/v1/coupon"
+  : "https://coupon-api-three.vercel.app/coupons/v1/coupon";
+
+const HEADERS = {
+  "Content-Type": "application/json",
+  "x-vercel-protection-bypass": "TEST",
+};
 
 export interface CreateCouponRequest {
+  orgId: string;
   title: string;
   amount: number;
   currency: string;
@@ -21,6 +29,7 @@ export interface CreateCouponResponse {
 }
 
 export interface ActivateCouponRequest {
+  orgId: string;
   userId: string;
   ip: string;
   data: {
@@ -38,7 +47,7 @@ export async function createCoupon(
 ): Promise<CreateCouponResponse> {
   const response = await fetch(`${BASE_URL}/create`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: HEADERS,
     body: JSON.stringify(data),
   });
   return response.json();
@@ -49,7 +58,7 @@ export async function activateCoupon(
 ): Promise<ActivateCouponResponse> {
   const response = await fetch(`${BASE_URL}/activate`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: HEADERS,
     body: JSON.stringify(data),
   });
   return response.json();
